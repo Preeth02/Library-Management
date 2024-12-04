@@ -4,7 +4,6 @@ import apiResponse from "../utils/apiResponse.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import { User } from "../models/user.models.js";
 
-<<<<<<< HEAD
 const generateTokens = async (
   userID,
   accessTokenSecret,
@@ -13,12 +12,6 @@ const generateTokens = async (
   const user = await User.findById(userID);
   const accessToken = user.generateAccessToken(accessTokenSecret);
   const refreshToken = user.generateRefreshToken(refreshTokenSecret);
-=======
-const generateTokens = async (userID) => {
-  const user = await User.findById(userID);
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
->>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
 
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
@@ -56,11 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
     fullName,
     password,
     avatar: avatar.url,
-<<<<<<< HEAD
     role: process.env.USER_ROLE || "USER",
-=======
-    role: "USER",
->>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
   });
   if (!user) {
     throw new apiError(400, "There was a error while registering the user");
@@ -88,15 +77,11 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(400, "Password is incorrect");
   }
 
-<<<<<<< HEAD
   const { accessToken, refreshToken } = await generateTokens(
     isUser._id,
     process.env.ACCESS_TOKEN_SECRET,
     process.env.REFRESH_TOKEN_SECRET
   );
-=======
-  const { accessToken, refreshToken } = await generateTokens(isUser._id);
->>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
 
   const loggedInUser = await User.findById(isUser._id).select(
     "-password -refreshToken"
@@ -133,19 +118,11 @@ const logoutUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
   };
-<<<<<<< HEAD
   return res
-=======
-  res
->>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new apiResponse(200, {}, "User logged out successfully"));
 });
 
-<<<<<<< HEAD
 export { registerUser, loginUser, logoutUser, generateTokens };
-=======
-export { registerUser, loginUser, logoutUser };
->>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc

@@ -23,8 +23,5 @@ const uploadOnCloudinary = async (localFilePath) => {
     return null;
   }
 };
-<<<<<<< HEAD
 
 export default uploadOnCloudinary;
-=======
->>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
