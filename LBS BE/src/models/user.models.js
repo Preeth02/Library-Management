@@ -65,26 +65,42 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+<<<<<<< HEAD
 userSchema.method.generateAccessToken = async function (tokenSecret) {
+=======
+userSchema.method.generateAccessToken = async function () {
+>>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
   return jwt.sign(
     {
       _id: this._id,
       email: this.email,
       username: this.username,
     },
+<<<<<<< HEAD
     tokenSecret,
+=======
+    process.env.ACCESS_TOKEN_SECRET,
+>>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     }
   );
 };
 
+<<<<<<< HEAD
 userSchema.method.genereteRefreshToken = async function (tokenSecret) {
+=======
+userSchema.method.genereteRefreshToken = async function () {
+>>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
   return jwt.sign(
     {
       _id: this._id,
     },
+<<<<<<< HEAD
     tokenSecret,
+=======
+    process.env.REFRESH_TOKEN_SECRET,
+>>>>>>> 695909d090a83bfa0010831facd1141ce70e93bc
     {
       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     }
