@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import mongooseAggregatePaginate from "mongoose-aggregate-paginate";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 import base62 from "base62/lib/ascii";
 
 const bookSchema = new Schema(
@@ -7,10 +7,12 @@ const bookSchema = new Schema(
     title: {
       type: String,
       required: true,
+      index: true,
     },
     description: {
       type: String,
       required: true,
+      index: true,
     },
     frontCover: {
       type: String,
@@ -29,8 +31,10 @@ const bookSchema = new Schema(
       {
         type: String,
         required: true,
+        index: true,
       },
     ],
+    default: [],
     barcode: {
       type: String,
       required: true,
@@ -38,12 +42,19 @@ const bookSchema = new Schema(
     genre: {
       type: String,
       required: true,
+      index: true,
     },
     tags: [
       {
         type: String,
+        index: true,
       },
     ],
+    default: [],
+    publishedDate: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );

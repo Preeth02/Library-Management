@@ -7,6 +7,7 @@ import { Book } from "../models/book.models.js";
 import { generateTokens } from "./user.controller.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -117,23 +118,51 @@ const addBookToDB = asyncHandler(async (req, res) => {
 
 const deleteBookFromDB = asyncHandler(async (req, res) => {
   const { bookId } = req.params;
-  const frontCover = req.book.frontCover.split("/").pop().split(".")[0];
-  console.log(frontCover);
-
-  const result = await cloudinary.uploader.destroy(frontCover);
-  console.log(result);
-  if (!result) {
-    throw new apiError(400, "Something went wrong while ");
+  if (!mongoose.isValidObjectId(bookId)) {
+    throw new apiError(400, "Provide a valid book ID");
   }
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const book = await Book.findById(bookId).session();
+    if (!book) {
+      throw new apiError(404, "Book with teh following ID is not found");
+    }
+    const frontCover = req.book.frontCover.split("/").pop().split(".")[0];
+    console.log(frontCover);
 
-  await Book.findByIdAndDelete(bookId);
-  return res
-    .status(200)
-    .json(new apiResponse(200, {}, "Book deleted successfully"));
+    const result = await cloudinary.uploader.destroy(frontCover);
+    console.log(result);
+    if (!result) {
+      throw new apiError(
+        400,
+        "Something went wrong try to delete the book again"
+      );
+    }
+
+    await Book.findByIdAndDelete(bookId).session();
+
+    session.commitTransaction();
+    session.endSession();
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, {}, "Book deleted successfully"));
+  } catch (error) {
+    session.abortTransaction();
+    session.endSession;
+    throw new apiError(
+      error?.status || 409,
+      error?.message || "Something went wrong while deleting the book"
+    );
+  }
 });
 
 const updateBook = asyncHandler(async (req, res) => {
   const { bookId } = req.params;
+  if (!mongoose.isValidObjectId(bookId)) {
+    throw new apiError(400, "Provide a valid book ID");
+  }
   const {
     title,
     description,
@@ -172,7 +201,7 @@ const updateBook = asyncHandler(async (req, res) => {
   );
 
   if (!book) {
-    throw new apiError(400, "Something went wrong while updating the book");
+    throw new apiError(400, "Something  wrong while updating the book");
   }
 
   return res

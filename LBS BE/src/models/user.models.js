@@ -17,6 +17,7 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      index: true,
     },
     fullName: {
       type: String,
@@ -39,6 +40,7 @@ const userSchema = new Schema(
         ref: "Book",
       },
     ],
+    default: [],
     refreshToken: {
       type: String,
     },
