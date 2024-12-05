@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import base62 from "base62/lib/ascii";
+import base62 from "base62/lib/ascii.js";
 
 const bookSchema = new Schema(
   {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyAdminJWT } from "../middlewares/admin.middleware.js";
+import { verifyAdminJWT } from "../middlewares/verifyAdminJWT.middleware.js";
 import {
   loginAdmin,
   addBookToDB,
