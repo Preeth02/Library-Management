@@ -30,7 +30,7 @@ export const verifyAdminOrUser = asyncHandler(async (req, res, next) => {
       token,
       process.env.ACCESS_TOKEN_ADMIN_SECRET
     );
-    console.log({ userDecodedToken, adminDecodedToken });
+    // console.log({ userDecodedToken, adminDecodedToken });
 
     if (userDecodedToken?.error && adminDecodedToken?.error) {
       console.log({ userTokenError, adminTokenError });

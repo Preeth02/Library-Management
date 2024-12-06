@@ -37,6 +37,7 @@ const bookSchema = new Schema(
     barcode: {
       type: String,
       required: true,
+      index: true,
     },
     genre: {
       type: String,
@@ -50,18 +51,18 @@ const bookSchema = new Schema(
       },
     ],
     publishedDate: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
   { timestamps: true }
 );
 
-bookSchema.pre("save", async (next) => {
-  if (this.barcode) {
+bookSchema.pre("save", async function (next) {
+  if (!this.isModified("barcode")) {
     return next();
   }
-  this.barcode = base62.encode(this._id.toString());
+  this.barcode = base62.encode(this.barcode);
   next();
 });
 

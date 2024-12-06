@@ -76,14 +76,14 @@ const addBookToDB = asyncHandler(async (req, res) => {
     publishedDate,
   } = req.body;
   if (
-    [title, description, stocks, authors, genre].some(
+    [title, description, stocks, authors, genre, publishedDate].some(
       (fields) => fields?.trim() === ""
     )
   ) {
     throw new apiError(400, "All the fields are required");
   }
 
-  const frontCoverLocalPath = req.files?.frontCover[0]?.path;
+  const frontCoverLocalPath = req?.file?.path;
   if (!frontCoverLocalPath) {
     throw new apiError(400, "Front cover page is required");
   }
@@ -96,19 +96,34 @@ const addBookToDB = asyncHandler(async (req, res) => {
     );
   }
 
-  const book = await Book.create({
-    title,
-    description,
-    frontCover: frontCover.url,
-    isAvailableOnline,
-    stocks,
-    authors,
-    genre,
-    publishedDate,
-    tags: tags || [],
-  });
-  if (!book) {
-    throw new apiError(400, "Something went wrong while creating the book");
+  const barcode = Math.floor(
+    Math.random() * 1000000000 + Math.floor(Math.random() * 1000000000)
+  );
+  // console.log(barcode);
+  try {
+    const book = await Book.create({
+      title,
+      description,
+      frontCover: frontCover.url,
+      isAvailableOnline,
+      stocks,
+      authors: authors.split(" "),
+      genre,
+      publishedDate,
+      tags: tags ? tags.split(" ") : [],
+      barcode: barcode,
+    });
+    if (!book) {
+      throw new apiError(400, "Something went wrong while creating the book");
+    }
+  } catch (error) {
+    const frontCoverPath = frontCover?.url?.split("/").pop().split(".")[0];
+    await cloudinary.uploader.destroy(frontCoverPath);
+
+    throw new apiError(
+      error?.status || 400,
+      error?.message || "Something went wrong while creating the book"
+    );
   }
 
   return res
