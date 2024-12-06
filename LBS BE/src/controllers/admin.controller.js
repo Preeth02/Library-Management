@@ -17,7 +17,7 @@ cloudinary.config({
 
 const loginAdmin = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
-  if (!email || !username) {
+  if (!(email || username)) {
     throw new apiError(401, "Email or username is required");
   }
   const admin = await User.findOne({
@@ -26,6 +26,9 @@ const loginAdmin = asyncHandler(async (req, res) => {
   if (!admin) {
     throw new apiError(404, "User with the email or username is not found");
   }
+  if (!(admin.role === process.env.ADMIN_ROLE)) {
+    throw new apiError(400, "Access Denied");
+  }
   if (!password) {
     throw new apiError(401, "Password is required");
   }
@@ -33,9 +36,6 @@ const loginAdmin = asyncHandler(async (req, res) => {
   const isValidPassword = await admin.isPasswordCorrect(password);
   if (!isValidPassword) {
     throw new apiError(400, "Invalid admin credentials");
-  }
-  if (!admin.role === process.env.ADMIN_ROLE) {
-    throw new apiError(400, "Access Denied");
   }
   const { accessToken, refreshToken } = await generateTokens(
     admin?._id,
@@ -53,8 +53,8 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .cookies("accessToken", accessToken, options)
-    .cookies("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .json(
       new apiResponse(
         200,
@@ -73,6 +73,7 @@ const addBookToDB = asyncHandler(async (req, res) => {
     authors,
     genre,
     tags,
+    publishedDate,
   } = req.body;
   if (
     [title, description, stocks, authors, genre].some(
@@ -103,6 +104,7 @@ const addBookToDB = asyncHandler(async (req, res) => {
     stocks,
     authors,
     genre,
+    publishedDate,
     tags: tags || [],
   });
   if (!book) {

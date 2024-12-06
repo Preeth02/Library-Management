@@ -40,7 +40,6 @@ const userSchema = new Schema(
         ref: "Book",
       },
     ],
-    default: [],
     refreshToken: {
       type: String,
     },
@@ -67,7 +66,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.generateAccessToken = async function (tokenSecret) {
+userSchema.methods.generateAccessToken = async function (tokenSecret) {
   return jwt.sign(
     {
       _id: this._id,
@@ -81,7 +80,7 @@ userSchema.method.generateAccessToken = async function (tokenSecret) {
   );
 };
 
-userSchema.method.genereteRefreshToken = async function (tokenSecret) {
+userSchema.methods.genereteRefreshToken = async function (tokenSecret) {
   return jwt.sign(
     {
       _id: this._id,

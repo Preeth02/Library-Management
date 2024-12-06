@@ -21,7 +21,10 @@ export const verifyAdminOrUser = asyncHandler(async (req, res, next) => {
     }
 
     //Trying to verify the user's token first and if there's an error storing it in a variable
-    const userDecodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const userDecodedToken = verifyAnyJwtFunc(
+      token,
+      process.env.ACCESS_TOKEN_SECRET
+    );
     //Verifying the admin's token and returning error
     const adminDecodedToken = verifyAnyJwtFunc(
       token,

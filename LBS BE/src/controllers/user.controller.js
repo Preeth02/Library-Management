@@ -10,8 +10,8 @@ const generateTokens = async (
   refreshTokenSecret
 ) => {
   const user = await User.findById(userID);
-  const accessToken = user.generateAccessToken(accessTokenSecret);
-  const refreshToken = user.generateRefreshToken(refreshTokenSecret);
+  const accessToken =await user.generateAccessToken(accessTokenSecret);
+  const refreshToken =await user.genereteRefreshToken(refreshTokenSecret);
 
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
@@ -34,7 +34,8 @@ const registerUser = asyncHandler(async (req, res) => {
   if (userExisted) {
     throw new apiError(409, "User with email or username already existed");
   }
-  const avatarLocalPath = req.files?.avatar[0]?.path;
+  const avatarLocalPath = req?.file?.path;
+  console.log(avatarLocalPath);
   if (!avatarLocalPath) {
     throw new apiError(400, "Avatar file is required");
   }
@@ -90,7 +91,6 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
   };
-
   return res
     .status(201)
     .cookie("accessToken", accessToken, options)

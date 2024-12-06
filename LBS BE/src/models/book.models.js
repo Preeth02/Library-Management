@@ -34,7 +34,6 @@ const bookSchema = new Schema(
         index: true,
       },
     ],
-    default: [],
     barcode: {
       type: String,
       required: true,
@@ -50,7 +49,6 @@ const bookSchema = new Schema(
         index: true,
       },
     ],
-    default: [],
     publishedDate: {
       type: Number,
       required: true,
