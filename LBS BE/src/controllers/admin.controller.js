@@ -100,8 +100,9 @@ const addBookToDB = asyncHandler(async (req, res) => {
     Math.random() * 1000000000 + Math.floor(Math.random() * 1000000000)
   );
   // console.log(barcode);
+  let book;
   try {
-    const book = await Book.create({
+    book = await Book.create({
       title,
       description,
       frontCover: frontCover.url,
@@ -145,11 +146,11 @@ const deleteBookFromDB = asyncHandler(async (req, res) => {
     if (!book) {
       throw new apiError(404, "Book with teh following ID is not found");
     }
-    const frontCover = req.book.frontCover.split("/").pop().split(".")[0];
-    console.log(frontCover);
+    const frontCover = book.frontCover.split("/").pop().split(".")[0];
+    // console.log(frontCover);
 
     const result = await cloudinary.uploader.destroy(frontCover);
-    console.log(result);
+    // console.log(result);
     if (!result) {
       throw new apiError(
         400,
@@ -188,10 +189,11 @@ const updateBook = asyncHandler(async (req, res) => {
     authors,
     genre,
     tags,
+    publishedDate,
   } = req.body;
-
+  
   if (
-    [title, description, stocks, authors, genre].some(
+    [title, description, stocks, authors, genre, publishedDate].some(
       (fields) => fields?.trim() === ""
     )
   ) {
