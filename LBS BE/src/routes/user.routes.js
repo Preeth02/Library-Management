@@ -14,6 +14,6 @@ const router = Router();
 router.route("/register").post(upload.single("avatar"), registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(verifyAdminOrUser, logoutUser);
-router.route("/get/user").post(verifyAdminOrUser, getUser);
+router.route("/get-user").get(verifyAdminOrUser, getUser);
 
 export default router;
