@@ -10,8 +10,8 @@ const generateTokens = async (
   refreshTokenSecret
 ) => {
   const user = await User.findById(userID);
-  const accessToken =await user.generateAccessToken(accessTokenSecret);
-  const refreshToken =await user.genereteRefreshToken(refreshTokenSecret);
+  const accessToken = await user.generateAccessToken(accessTokenSecret);
+  const refreshToken = await user.genereteRefreshToken(refreshTokenSecret);
 
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
@@ -125,4 +125,10 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, {}, "User logged out successfully"));
 });
 
-export { registerUser, loginUser, logoutUser, generateTokens };
+const getUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new apiResponse(200, req.user, "Current user fetched successfully"));
+});
+
+export { registerUser, loginUser, logoutUser, generateTokens, getUser };
