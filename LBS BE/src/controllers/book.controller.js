@@ -51,7 +51,7 @@ const borrowBook = asyncHandler(async (req, res) => {
         },
       },
       { new: true, runValidators: true, session }
-    );
+    ).select("-password -refreshToken");
     if (!borrowedBook) {
       throw new apiError(
         400,
@@ -73,19 +73,19 @@ const borrowBook = asyncHandler(async (req, res) => {
         "Something went wrong when updating the book after borrowing"
       );
     }
-    session.commitTransaction();
+    await session.commitTransaction();
     session.endSession();
     return res
       .status(200)
       .json(
         new apiResponse(
           200,
-          [borrowedBook, bookStock],
+          borrowedBook,
           "Book has been successfully added to your slot"
         )
       );
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     session.endSession();
     throw new apiError(409, error?.message);
   }
@@ -101,16 +101,25 @@ const returnBook = asyncHandler(async (req, res) => {
     throw new apiError(400, "You cannot return books before borrowing.");
   }
 
+  const bookInUser = user?.books.some((book) => String(book) === bookId);
+  //   console.log(bookInUser);
+  if (!bookInUser) {
+    throw new apiError(404, "You have not borrowed the book to return it ");
+  }
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
+    const book = await Book.findById(bookId).session(session);
+    if (!book) {
+      throw new apiError(404, "Book with the ID not found");
+    }
     const returnedBook = await User.findByIdAndUpdate(
       user._id,
       {
         $pull: { books: bookId },
       },
       { new: true, session }
-    );
+    ).select("-password -refreshToken");
     if (!returnedBook) {
       throw new apiError(400, "Something went wrong while returning the book");
     }
@@ -119,7 +128,7 @@ const returnBook = asyncHandler(async (req, res) => {
       bookId,
       {
         $set: {
-          stocks: stocks++,
+          stocks: book?.stocks + 1,
         },
       },
       { new: true, session }
@@ -130,7 +139,7 @@ const returnBook = asyncHandler(async (req, res) => {
         "There was an error while updating the stock after returning the book"
       );
     }
-    session.commitTransaction();
+    await session.commitTransaction();
     session.endSession();
     return res
       .status(200)
@@ -142,7 +151,7 @@ const returnBook = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     session.endSession();
     throw new apiError(409, error?.message);
   }
@@ -178,7 +187,7 @@ const getAllBookWithFilters = asyncHandler(async (req, res) => {
       { description: { $regex: query, $options: "i" } },
       { tags: { $regex: query, $options: "i" } },
       { genre: { $regex: query, $options: "i" } },
-      { author: { $regex: query, $options: "i" } },
+      { authors: { $regex: query, $options: "i" } },
     ];
   }
   await myAggregate.match(filter);
