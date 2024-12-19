@@ -51,7 +51,11 @@ const bookSchema = new Schema(
       },
     ],
     publishedDate: {
-      type: String,
+      type: Number,
+      required: true,
+    },
+    pages: {
+      type: Number,
       required: true,
     },
   },
