@@ -22,8 +22,16 @@ const authSlice = createSlice({
       state.userData = {};
       state.userBooks = {};
     },
+    borrowedBook: (state, action) => {
+      state.userBooks = action.payload;
+    },
+    returnedBooks: (state, action) => {
+      state.userBooks = state.userBooks.filter(
+        (bookId) => bookId !== action.payload
+      );
+    },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, borrowedBook, returnedBooks } = authSlice.actions;
 export default authSlice.reducer;
