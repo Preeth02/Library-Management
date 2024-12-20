@@ -17,7 +17,7 @@ import SidebarWrapper from "./components/SidebarWrapper";
 import BookDetails from "./pages/BookDetails";
 import FilterBooks from "./pages/FilterBooks";
 import AuthLayout from "./components/AuthLayout";
-import Logout from "./components/Logout";
+import Collections from "./components/Collections";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +47,7 @@ const router = createBrowserRouter(
         ></Route>
         <Route path="/book/:bookId" element={<BookDetails />}></Route>
         <Route path="/all-books/:query" element={<FilterBooks />}></Route>
+        <Route path="/collections" element={<Collections />}></Route>
       </Route>
       <Route
         path="/login"

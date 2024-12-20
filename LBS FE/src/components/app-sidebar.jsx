@@ -28,7 +28,7 @@ export function AppSidebar() {
             <nav className="space-y-2 px-4">
               {/* Dashboard */}
               <Link
-                to="/dashboard"
+                to="/"
                 className="flex items-center gap-2 p-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition"
               >
                 <FaBox className="text-xl" />

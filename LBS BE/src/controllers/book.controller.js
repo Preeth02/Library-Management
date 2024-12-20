@@ -3,7 +3,7 @@ import apiError from "../utils/apiError.js";
 import apiResponse from "../utils/apiResponse.js";
 import { Book } from "../models/book.models.js";
 import { User } from "../models/user.models.js";
-import mongoose from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
 const getBookDetails = asyncHandler(async (req, res) => {
   const { bookId } = req.params;
@@ -202,4 +202,46 @@ const getAllBookWithFilters = asyncHandler(async (req, res) => {
     );
 });
 
-export { getBookDetails, borrowBook, returnBook, getAllBookWithFilters };
+const getCollections = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const userAggregate = await User.aggregate([
+    {
+      $match: {
+        _id: new Types.ObjectId(user._id),
+      },
+    },
+    {
+      $lookup: {
+        from: "books",
+        localField: "books",
+        foreignField: "_id",
+        as: "userBooks",
+      },
+    },
+    {
+      $project: {
+        userBooks: 1,
+      },
+    },
+  ]);
+  // console.log(userAggregate);
+  if (!userAggregate) {
+    throw new apiError(
+      400,
+      "Something went wrong while fetching the userBooks"
+    );
+  }
+  return res
+    .status(200)
+    .json(
+      new apiResponse(200, userAggregate[0], "user Books Fetched Successfully")
+    );
+});
+
+export {
+  getBookDetails,
+  borrowBook,
+  returnBook,
+  getAllBookWithFilters,
+  getCollections,
+};
