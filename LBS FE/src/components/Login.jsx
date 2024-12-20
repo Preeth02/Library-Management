@@ -33,16 +33,18 @@ function Login() {
   const [result, setResult] = useState({});
   const loginFunc = async (data) => {
     const role = data?.role;
+    const plLink =
+      role === "user"
+        ? "http://localhost:3000/api/v1/user/login"
+        : "http://localhost:3000/api/v1/admin/login";
+    console.log(plLink);
     const userData = {
       username: data.emailOrName,
       password: data.password,
       email: data.emailOrName,
     };
     const methods = {
-      link:
-        role === "user"
-          ? "http://localhost:3000/api/v1/user/login"
-          : "http://localhost:3000/api/v1/admin/login",
+      link: plLink,
       body: JSON.stringify(userData),
       method: "POST",
       headers: {
@@ -50,11 +52,13 @@ function Login() {
       },
     };
     const result1 = await fetchReq(methods);
+    console.log(result1.data);
     if (result1.data !== null) {
-      // console.log(result1.data.user)
-      dispatch(login(result1.data.user));
+      dispatch(login(result1.data.admin));
       setResult(result1);
       navigate("/");
+    } else {
+      setResult(result1);
     }
     // console.log(result1);
   };

@@ -11,10 +11,10 @@ import { verifyUserJWT } from "../middlewares/verifyUserJWT.middleware.js";
 const router = Router();
 
 router.route("/get-book/:bookId").get(verifyAdminOrUser, getBookDetails);
+router.route("/get-books").get(verifyAdminOrUser, getAllBookWithFilters);
+router.route("/get-collections").get(verifyAdminOrUser, getCollections);
 router.use(verifyUserJWT);
 router.route("/borrow/book/:bookId").patch(borrowBook);
 router.route("/return/book/:bookId").patch(returnBook);
-router.route("/get-books").get(getAllBookWithFilters);
-router.route("/get-collections").get(getCollections);
 
 export default router;

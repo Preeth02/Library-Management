@@ -5,11 +5,26 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuGroup,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+} from "@/components/ui/dropdown-menu";
+
+import { Plus, Edit } from "lucide-react";
+import { Button } from "./ui/button";
+import { NavLink, Link } from "react-router-dom";
 import { FaBox, FaFolder, FaBookmark, FaCogs } from "react-icons/fa";
 import Logout from "./Logout";
+import { useSelector } from "react-redux";
 
 export function AppSidebar() {
+  const user = useSelector((state) => state.auth.userData);
   return (
     <Sidebar>
       {/* Header */}
@@ -27,31 +42,49 @@ export function AppSidebar() {
           <SidebarGroup className="space-y-2 px-4 my-5">
             <nav className="space-y-2 px-4">
               {/* Dashboard */}
-              <Link
+              <NavLink
                 to="/"
-                className="flex items-center gap-2 p-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md text-white ${
+                    isActive
+                      ? "bg-blue-600 hover:bg-blue-700"
+                      : " hover:bg-gray-800"
+                  }  transition`
+                }
               >
                 <FaBox className="text-xl" />
                 <span className="text-lg font-medium">Dashboard</span>
-              </Link>
+              </NavLink>
 
               {/* My Collections */}
-              <Link
+              <NavLink
                 to="/collections"
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-800 transition"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md text-white ${
+                    isActive
+                      ? "bg-blue-600 hover:bg-blue-700"
+                      : " hover:bg-gray-800"
+                  }  transition`
+                }
               >
                 <FaFolder className="text-xl" />
                 <span className="text-lg font-medium">My Collections</span>
-              </Link>
+              </NavLink>
 
               {/* Favourites */}
-              <Link
+              <NavLink
                 to="/favourites"
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-800 transition"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md text-white ${
+                    isActive
+                      ? "bg-blue-600 hover:bg-blue-700"
+                      : " hover:bg-gray-800"
+                  }  transition`
+                }
               >
                 <FaBookmark className="text-xl" />
                 <span className="text-lg font-medium">Favourites</span>
-              </Link>
+              </NavLink>
             </nav>
           </SidebarGroup>
         </SidebarContent>
@@ -61,13 +94,44 @@ export function AppSidebar() {
           <SidebarGroup className="space-y-2">
             <nav className="space-y-2">
               {/* Settings */}
-              <Link
-                to="/settings"
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-800 transition"
-              >
-                <FaCogs className="text-xl" />
-                <span className="text-lg font-medium">Settings</span>
-              </Link>
+              {user.role === "ADMIN" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      className={`flex items-center gap-2 p-2 rounded-md text-white transition cursor-pointer hover:bg-gray-800`}
+                    >
+                      <FaCogs className="text-xl" />
+                      <span className="text-lg font-medium">Settings</span>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 bg-gray-900 text-white border border-gray-700 shadow-lg">
+                    <DropdownMenuLabel className="text-gray-400">
+                      Settings
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="bg-gray-700" />
+                    <DropdownMenuGroup>
+                      {/* Add Books Option */}
+                      <DropdownMenuItem className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                        <Plus className="text-gray-400" />
+                        <Link to={"/addBooks"}>Add Books</Link>
+                        <DropdownMenuShortcut className="text-gray-500">
+                          ⌘A
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+
+                      {/* Update Books Option */}
+                      <DropdownMenuItem className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                        <Edit className="text-gray-400" />
+                        <Link to={"/updateBook"}>Update Books</Link>
+                        <DropdownMenuShortcut className="text-gray-500">
+                          ⌘U
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+
               {/* Logout */}
               <Logout />
             </nav>
