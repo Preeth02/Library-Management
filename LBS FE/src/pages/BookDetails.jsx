@@ -16,9 +16,13 @@ function BookDetails() {
   const [loading, setLoading] = useState(false);
   const booksFromStore = useSelector((state) => state.books.booksData);
   const userBooks = useSelector((state) => state.auth.userBooks);
+  const user = useSelector((state) => state.auth.userData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //   console.log(bookId.split(":")[1]);
+  const editBook = async () => {};
+  const deleteBook = async () => {};
+
   const borrowTheBook = async () => {
     if (
       userBooks.filter((book_Id) => book_Id === bookId.split(":")[1]).length > 0
@@ -121,22 +125,42 @@ function BookDetails() {
                   </p>
                   <p className="text-yellow-400 text-sm mt-2">★ 4</p>
                 </div>
-                <div className="flex gap-3">
-                  <Button
-                    className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
-                    onClick={borrowTheBook}
-                  >
-                    Borrow Book
-                  </Button>
-                  {userBooks.includes(bookId.split(":")[1]) && (
+                {user.role === "USER" && (
+                  <div className="flex gap-3">
                     <Button
-                      className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
-                      onClick={returnTheBook}
+                      className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
+                      onClick={borrowTheBook}
                     >
-                      Return Book
+                      Borrow Book
                     </Button>
-                  )}
-                </div>
+                    {userBooks.includes(bookId.split(":")[1]) && (
+                      <Button
+                        className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
+                        onClick={returnTheBook}
+                      >
+                        Return Book
+                      </Button>
+                    )}
+                  </div>
+                )}
+                {user.role === "ADMIN" && (
+                  <div className="flex gap-3">
+                    <Button
+                      className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
+                      onClick={editBook}
+                    >
+                      Edit Book
+                    </Button>
+                    {userBooks.includes(bookId.split(":")[1]) && (
+                      <Button
+                        className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
+                        onClick={deleteBook}
+                      >
+                        Delete Book
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

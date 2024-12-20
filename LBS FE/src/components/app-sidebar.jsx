@@ -119,14 +119,14 @@ export function AppSidebar() {
                         </DropdownMenuShortcut>
                       </DropdownMenuItem>
 
-                      {/* Update Books Option */}
+                      {/* Update Books Option
                       <DropdownMenuItem className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
                         <Edit className="text-gray-400" />
                         <Link to={"/updateBook"}>Update Books</Link>
                         <DropdownMenuShortcut className="text-gray-500">
                           ⌘U
                         </DropdownMenuShortcut>
-                      </DropdownMenuItem>
+                      </DropdownMenuItem> */}
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
