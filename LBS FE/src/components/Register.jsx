@@ -24,7 +24,6 @@ function Register() {
     register,
     formState: { errors },
   } = useForm();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [result, setResult] = useState({});
   const loginFunc = async (data) => {
@@ -49,7 +48,8 @@ function Register() {
     //   navigate("/");
     // }
     if (result1.data) {
-      toast("You have been registered successfully.");
+      toast("You have been registered successfully. Please login.");
+      navigate("/login");
     }
     console.log(result1);
   };

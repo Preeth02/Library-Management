@@ -14,15 +14,56 @@ import {
 import { Provider } from "react-redux";
 import Home from "./components/main/Home";
 import SidebarWrapper from "./components/SidebarWrapper";
+import BookDetails from "./pages/BookDetails";
+import FilterBooks from "./pages/FilterBooks";
+import AuthLayout from "./components/AuthLayout";
+import Logout from "./components/Logout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="/" element={<SidebarWrapper />}>
-        <Route path="/" element={<Home />}></Route>
+    <Route
+      path="/"
+      element={
+        <AuthLayout>
+          <App />
+        </AuthLayout>
+      }
+    >
+      <Route
+        path="/"
+        element={
+          <AuthLayout>
+            <SidebarWrapper />
+          </AuthLayout>
+        }
+      >
+        <Route
+          path="/"
+          element={
+            // <AuthLayout>
+            <Home />
+            // </AuthLayout>
+          }
+        ></Route>
+        <Route path="/book/:bookId" element={<BookDetails />}></Route>
+        <Route path="/all-books/:query" element={<FilterBooks />}></Route>
       </Route>
-      <Route path="/login" element={<Login />}></Route>
-      <Route path="/signup" element={<Register />}></Route>
+      <Route
+        path="/login"
+        element={
+          <AuthLayout authentication={false}>
+            <Login />
+          </AuthLayout>
+        }
+      ></Route>
+      <Route
+        path="/signup"
+        element={
+          <AuthLayout authentication={false}>
+            <Register />
+          </AuthLayout>
+        }
+      ></Route>
     </Route>
   )
 );

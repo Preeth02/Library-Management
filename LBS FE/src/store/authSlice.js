@@ -3,7 +3,8 @@ import { act } from "react";
 
 const initialState = {
   status: false,
-  userData: null,
+  userData: {},
+  userBooks: [],
 };
 
 const authSlice = createSlice({
@@ -13,10 +14,13 @@ const authSlice = createSlice({
     login: (state, action) => {
       state.status = true;
       state.userData = action.payload;
+      state.userBooks = action.payload.books;
+      // console.log(action.payload.books);
     },
     logout: (state, action) => {
       state.status = false;
-      state.userData = null;
+      state.userData = {};
+      state.userBooks = {};
     },
   },
 });

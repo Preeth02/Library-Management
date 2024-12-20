@@ -50,9 +50,10 @@ function Login() {
       },
     };
     const result1 = await fetchReq(methods);
-    setResult(result1);
     if (result1.data !== null) {
-      dispatch(login(result1.data));
+      // console.log(result1.data.user)
+      dispatch(login(result1.data.user));
+      setResult(result1);
       navigate("/");
     }
     // console.log(result1);

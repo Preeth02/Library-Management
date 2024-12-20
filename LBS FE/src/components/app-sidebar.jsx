@@ -4,16 +4,10 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import {
-  FaBox,
-  FaFolder,
-  FaBookmark,
-  FaCogs,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaBox, FaFolder, FaBookmark, FaCogs } from "react-icons/fa";
+import Logout from "./Logout";
 
 export function AppSidebar() {
   return (
@@ -24,7 +18,7 @@ export function AppSidebar() {
           <Link to={"/"} className="flex ">
             <h1 className="text-2xl font-bold text-blue-500">JSSATEB</h1>
           </Link>
-        {/* <SidebarTrigger /> */}
+          {/* <SidebarTrigger /> */}
         </SidebarHeader>
         {/* Content */}
         <hr className="border-gray-600 " />
@@ -74,17 +68,8 @@ export function AppSidebar() {
                 <FaCogs className="text-xl" />
                 <span className="text-lg font-medium">Settings</span>
               </Link>
-
               {/* Logout */}
-              <Link
-                to="/logout"
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-800 transition"
-              >
-                <FaSignOutAlt className="text-xl text-red-500" />
-                <span className="text-lg font-medium text-red-400">
-                  Log out
-                </span>
-              </Link>
+              <Logout />
             </nav>
           </SidebarGroup>
         </SidebarFooter>

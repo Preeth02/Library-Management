@@ -158,7 +158,7 @@ const returnBook = asyncHandler(async (req, res) => {
 });
 
 const getAllBookWithFilters = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType } = req.query;
+  const { page = 1, limit, query, sortBy, sortType } = req.query;
   const options = {
     page: parseInt(page),
     limit: parseInt(limit),

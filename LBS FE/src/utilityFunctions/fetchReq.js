@@ -20,7 +20,7 @@ const fetchReq = async ({
       }
     }
   } catch (error) {
-    return { data: null, error: error };
+    return { data: null, error: error.message };
   }
 };
 

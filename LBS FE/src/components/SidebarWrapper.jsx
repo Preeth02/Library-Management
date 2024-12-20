@@ -8,9 +8,15 @@ function SidebarWrapper() {
     <div>
       <SidebarProvider>
         <AppSidebar />
-        <div className="border-gray-500 border-r-[1px] max-h-screen"></div>
-        <main>
-          <Outlet></Outlet>
+        <div className="h-screen bg-gray-800 sticky top-0 flex">
+          <div className="border-gray-500 border-r-[1px] min-h-screen"></div>
+          {/* <div className="h-screen bg-gray-800 "> */}
+            <SidebarTrigger className="bg-gray-800 text-white p-1 my-1" />
+          {/* </div> */}
+          <div className="border-gray-500 border-l-[1px] min-h-screen "></div>
+        </div>
+        <main className="w-full">
+          <Outlet/>
         </main>
       </SidebarProvider>
     </div>
