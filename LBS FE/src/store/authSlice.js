@@ -23,7 +23,7 @@ const authSlice = createSlice({
       state.userBooks = {};
     },
     borrowedBook: (state, action) => {
-      state.userBooks = action.payload;
+      state.userBooks.push(action.payload);
     },
     returnedBooks: (state, action) => {
       state.userBooks = state.userBooks.filter(

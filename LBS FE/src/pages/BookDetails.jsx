@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import fetchReq from "@/utilityFunctions/fetchReq";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "@/components/SearchBar";
 import { toast } from "sonner";
+import { borrowedBook, returnedBooks } from "@/store/authSlice";
 
 function BookDetails() {
   const { bookId } = useParams();
@@ -14,9 +15,20 @@ function BookDetails() {
   const [book, setBook] = useState({});
   const [loading, setLoading] = useState(false);
   const booksFromStore = useSelector((state) => state.books.booksData);
+  const userBooks = useSelector((state) => state.auth.userBooks);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   //   console.log(bookId.split(":")[1]);
   const borrowTheBook = async () => {
+    if (
+      userBooks.filter((book_Id) => book_Id === bookId.split(":")[1]).length > 0
+    ) {
+      toast("You cannot borrow the same book again");
+      return;
+    } else if (userBooks.length === 3) {
+      toast("You cannot borrow more than 3 books at a time");
+      return;
+    }
     const borrowed = await fetchReq({
       link: `http://localhost:3000/api/v1/book/borrow/book/${
         bookId.split(":")[1]
@@ -24,16 +36,37 @@ function BookDetails() {
       method: "PATCH",
     });
     if (borrowed.error) {
-      // console.error(borrowed.error);
-      // console.log(borrowed.error.includes("Unexpected token"));
-      if (borrowed.error.includes("Unexpected token")) {
-        toast("You cannot borrow the same book again");
-      } else
-        toast(
-          "There was something wrong while borrowing the book.Please try again"
-        );
+      toast(
+        "There was something wrong while borrowing the book.Please try again"
+      );
     } else {
       toast("Book has been successfully added to your collection.");
+      dispatch(borrowedBook(bookId.split(":")[1]));
+    }
+  };
+  const returnTheBook = async () => {
+    // if (
+    //   userBooks.filter((book_Id) => book_Id === bookId.split(":")[1]).length > 0
+    // ) {
+    //   toast("You cannot borrow the same book again");
+    //   return;
+    // } else if (userBooks.length === 3) {
+    //   toast("You cannot borrow more than 3 books at a time");
+    //   return;
+    // }
+    const returning = await fetchReq({
+      link: `http://localhost:3000/api/v1/book/return/book/${
+        bookId.split(":")[1]
+      }`,
+      method: "PATCH",
+    });
+    if (returning.error) {
+      toast(
+        "There was something wrong while returning the book.Please try again"
+      );
+    } else {
+      toast("Book has been successfully returned.");
+      dispatch(returnedBooks(bookId.split(":")[1]));
     }
   };
 
@@ -69,7 +102,7 @@ function BookDetails() {
         <div className="flex flex-col gap-6">
           <div className="flex-1 flex flex-col items-start mb-4">
             <div className="bg-gray-800 rounded-lg p-3 shadow-lg w-9/12 h-1/3 flex gap-4">
-              <div>
+              <div className="object-none">
                 <img
                   src={book.frontCover}
                   alt="Book Cover"
@@ -86,16 +119,24 @@ function BookDetails() {
                   <p className="text-sm text-gray-400 mb-4">
                     {book.description}
                   </p>
-                  <p className="text-yellow-400 text-sm mt-2">
-                    ★ {Math.floor(Math.random() * 5 + 1)}
-                  </p>
+                  <p className="text-yellow-400 text-sm mt-2">★ 4</p>
                 </div>
-                <Button
-                  className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
-                  onClick={borrowTheBook}
-                >
-                  Borrow Book
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
+                    onClick={borrowTheBook}
+                  >
+                    Borrow Book
+                  </Button>
+                  {userBooks.includes(bookId.split(":")[1]) && (
+                    <Button
+                      className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
+                      onClick={returnTheBook}
+                    >
+                      Return Book
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
