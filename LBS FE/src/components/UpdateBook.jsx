@@ -16,9 +16,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import fetchReq from "@/utilityFunctions/fetchReq";
+import { useSelector } from "react-redux";
 
 function UpdateBook() {
-  const [bookData, setBookData] = useState({});
+  //   const [bookData, setBookData] = useState({});
+  const bookData = useSelector((state) => state.books.currentBook);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { bookId } = useParams();
@@ -31,11 +33,11 @@ function UpdateBook() {
       title: bookData?.title || "",
       description: bookData?.description || "",
       stocks: bookData?.stocks || "",
-      authors:bookData?.authors || "",
-      pages:bookData?.pages|| "",
-      publishedDate:bookData?.publishedDate|| "",
-      tags:bookData?.tags|| "",
-      genre:bookData?.genre|| "",
+      authors: bookData?.authors || "",
+      pages: bookData?.pages || "",
+      publishedDate: bookData?.publishedDate || "",
+      tags: bookData?.tags || "",
+      genre: bookData?.genre || "",
     },
   });
   const navigate = useNavigate();
@@ -45,7 +47,7 @@ function UpdateBook() {
       formData.append("frontCover", data.frontCover[0]);
       formData.append("isAvailableOnline", data.isAvailableOnline === "on");
     }
-
+    // console.log(data);
     for (const [key, value] of Object.entries(data)) {
       if (key !== "frontCover") {
         if (key === "isAvailableOnline") {
@@ -58,13 +60,13 @@ function UpdateBook() {
     try {
       //   console.log(formData);
       const response = await fetchReq({
-        link: "http://localhost:3000/api/v1/admin/update/book",
-        method: "POST",
+        link: `http://localhost:3000/api/v1/admin/update/book/${bookId}`,
+        method: "PATCH",
         body: formData,
       });
       //   const result = await response.json();
       if (response.data) {
-        toast.success("Book added successfully!");
+        toast.success("Book Updated successfully!");
         // console.log(response.data.title);
         navigate(`/book/:${response.data._id}`);
       } else {
@@ -74,26 +76,6 @@ function UpdateBook() {
       toast.error("Something went wrong!");
     }
   };
-
-  useEffect(() => {
-    setLoading(true);
-    (async () => {
-      const fetchBook = await fetchReq({
-        link: `http://localhost:3000/api/v1/book/get-book/${bookId}`,
-      });
-      if (!fetchBook) {
-        setError(fetchBook.error.message);
-      } else {
-        setBookData(fetchBook.data);
-        console.log(fetchBook.data);
-      }
-      setLoading(false);
-    })();
-    return () => {
-      setBookData(null);
-      setError(null);
-    };
-  }, [bookId]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 text-gray-200 px-4">

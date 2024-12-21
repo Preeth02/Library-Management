@@ -9,6 +9,7 @@ import SearchBar from "@/components/SearchBar";
 import { toast } from "sonner";
 import { borrowedBook, returnedBooks } from "@/store/authSlice";
 import UpdateBook from "@/components/UpdateBook";
+import { addCurrentBook } from "@/store/bookSlice";
 
 function BookDetails() {
   const { bookId } = useParams();
@@ -103,6 +104,7 @@ function BookDetails() {
         setError(fetchBook.error.message);
       } else {
         setBook(fetchBook.data);
+        dispatch(addCurrentBook(fetchBook.data))
         // console.log(fetchBook);
       }
       setLoading(false);
@@ -162,12 +164,12 @@ function BookDetails() {
                 )}
                 {user.role === "ADMIN" && (
                   <div className="flex gap-3">
-                    {/* <Button
+                    <Button
                       className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
                       onClick={editBook}
                     >
                       Edit Book
-                    </Button> */}
+                    </Button>
 
                     <Button
                       className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
