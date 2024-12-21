@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "@/components/SearchBar";
 import { toast } from "sonner";
 import { borrowedBook, returnedBooks } from "@/store/authSlice";
+import UpdateBook from "@/components/UpdateBook";
 
 function BookDetails() {
   const { bookId } = useParams();
@@ -20,8 +21,24 @@ function BookDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //   console.log(bookId.split(":")[1]);
-  const editBook = async () => {};
-  const deleteBook = async () => {};
+  const editBook = async () => {
+    navigate(`/updateBook/${bookId.split(":")[1]}`);
+  };
+  const deleteBook = async () => {
+    await fetchReq({
+      link: `http://localhost:3000/api/v1/admin/delete/book/${
+        bookId.split(":")[1]
+      }`,
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (res) {
+          toast("Book deleted successfully");
+          navigate("/");
+        }
+      })
+      .catch((err) => toast(`Something went wrong`));
+  };
 
   const borrowTheBook = async () => {
     if (
@@ -145,20 +162,19 @@ function BookDetails() {
                 )}
                 {user.role === "ADMIN" && (
                   <div className="flex gap-3">
-                    <Button
+                    {/* <Button
                       className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full"
                       onClick={editBook}
                     >
                       Edit Book
+                    </Button> */}
+
+                    <Button
+                      className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
+                      onClick={deleteBook}
+                    >
+                      Delete Book
                     </Button>
-                    {userBooks.includes(bookId.split(":")[1]) && (
-                      <Button
-                        className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg w-full"
-                        onClick={deleteBook}
-                      >
-                        Delete Book
-                      </Button>
-                    )}
                   </div>
                 )}
               </div>
@@ -190,6 +206,9 @@ function BookDetails() {
                       <p className="text-sm text-gray-400">{book.authors}</p>
                     </div>
                   ))}
+              {booksFromStore.books.length == 1 && (
+                <div>No similar books found</div>
+              )}
             </div>
           </div>
         </div>

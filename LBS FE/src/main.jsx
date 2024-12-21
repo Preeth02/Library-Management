@@ -19,6 +19,8 @@ import FilterBooks from "./pages/FilterBooks";
 import AuthLayout from "./components/AuthLayout";
 import Collections from "./components/Collections";
 import Settings from "./components/Settings";
+import AddBook from "./components/AddBooks";
+import UpdateBook from "./components/UpdateBook";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,6 +52,8 @@ const router = createBrowserRouter(
         <Route path="/all-books/:query" element={<FilterBooks />}></Route>
         <Route path="/collections" element={<Collections />}></Route>
         <Route path="/settings" element={<Settings />}></Route>
+        <Route path="/addBooks" element={<AddBook />}></Route>
+        <Route path="/updateBook/:bookId" element={<UpdateBook />}></Route>
       </Route>
       <Route
         path="/login"

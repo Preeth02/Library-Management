@@ -72,7 +72,7 @@ export function AppSidebar() {
               </NavLink>
 
               {/* Favourites */}
-              <NavLink
+              {/* <NavLink
                 to="/favourites"
                 className={({ isActive }) =>
                   `flex items-center gap-2 p-2 rounded-md text-white ${
@@ -84,7 +84,7 @@ export function AppSidebar() {
               >
                 <FaBookmark className="text-xl" />
                 <span className="text-lg font-medium">Favourites</span>
-              </NavLink>
+              </NavLink> */}
             </nav>
           </SidebarGroup>
         </SidebarContent>

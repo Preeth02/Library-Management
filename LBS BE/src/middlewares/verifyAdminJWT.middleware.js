@@ -8,6 +8,7 @@ export const verifyAdminJWT = asyncHandler(async (req, res, next) => {
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
+      // console.log(token)
     if (!token) {
       throw new apiError(401, "Unothrized request");
     }

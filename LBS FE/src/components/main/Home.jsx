@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import fetchReq from "@/utilityFunctions/fetchReq";
 import { AlertDestructive } from "../AlertDes";
 import { useNavigate } from "react-router-dom";
@@ -36,13 +37,13 @@ function Home() {
       {/* Search Bar */}
       <SearchBar />
       {/* Featured Section */}
-      <div className="bg-gray-800 rounded-lg p-6 mb-6">
+      {/* <div className="bg-gray-800 rounded-lg p-6 mb-6">
         <h3 className="text-xl font-bold mb-2">Frank Miller</h3>
         <p className="text-3xl font-bold mb-4">Batman: The Dark Knight</p>
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
           View Details
         </button>
-      </div>
+      </div> */}
       <div className="min-w-full gap-6 ">
         {/* Top Rated Comics */}
         <div>
