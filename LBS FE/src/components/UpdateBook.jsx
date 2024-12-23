@@ -16,7 +16,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import fetchReq from "@/utilityFunctions/fetchReq";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addCurrentBook } from "@/store/bookSlice";
 
 function UpdateBook() {
   //   const [bookData, setBookData] = useState({});
@@ -24,6 +25,7 @@ function UpdateBook() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { bookId } = useParams();
+  const dispatch=useDispatch()
   const {
     handleSubmit,
     register,
@@ -68,6 +70,8 @@ function UpdateBook() {
       if (response.data) {
         toast.success("Book Updated successfully!");
         // console.log(response.data.title);
+        dispatch(addCurrentBook(response.data))
+        console.log(response.data)
         navigate(`/book/:${response.data._id}`);
       } else {
         toast.error(result.message || "Failed to add book.");

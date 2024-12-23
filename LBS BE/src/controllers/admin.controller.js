@@ -218,7 +218,7 @@ const updateBook = asyncHandler(async (req, res) => {
       runValidators: true,
     }
   );
-
+console.log(book)
   if (!book) {
     throw new apiError(400, "Something  wrong while updating the book");
   }

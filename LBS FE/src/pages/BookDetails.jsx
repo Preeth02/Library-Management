@@ -113,7 +113,7 @@ function BookDetails() {
       setBook(null);
       setError(null);
     };
-  }, [bookId]);
+  }, [bookId,navigate]);
   return (
     <div className="bg-gray-900 text-white min-h-screen w-full flex flex-col flex-1 p-4">
       {/* Search Bar */}

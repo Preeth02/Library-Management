@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { Checkbox } from "@/components/ui/checkbox";
 import fetchReq from "@/utilityFunctions/fetchReq";
 import { login } from "@/store/authSlice";
+import { toast } from "sonner";
 
 function Login() {
   const {
@@ -56,9 +57,11 @@ function Login() {
     if (result1.data !== null) {
       dispatch(login(result1.data.admin));
       setResult(result1);
+      toast("You have been logged in successfully");
       navigate("/");
     } else {
       setResult(result1);
+      toast("There was an error while logging in");
     }
     // console.log(result1);
   };
